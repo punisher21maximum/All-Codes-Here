@@ -9,21 +9,6 @@ struct Node
 	struct Node * left;
 	struct Node * right;	
 };
-void dispInorder(struct Node * ptr)
-{
-	
-    if (ptr != NULL)
-    {
-        dispInorder(ptr->left);
-        cout<<ptr->data<<endl;
-        dispInorder(ptr->right);
-    }
-    else  
-    {
-        cout<<"Tree is done"<<endl;
-        
-    }
-}
 void disp(int order, struct Node * ptr)
 {
 	if( order == 1 )//inOrder
