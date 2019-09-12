@@ -1,0 +1,101 @@
+#include<iostream>
+#include<stdio.h> 
+#include<stdlib.h> 
+using namespace std;
+
+struct Node 
+{
+	int data;
+	struct Node * left;
+	struct Node * right;	
+};
+void dispInorder(struct Node * ptr)
+{
+	
+    if (ptr != NULL)
+    {
+        dispInorder(ptr->left);
+        cout<<ptr->data<<endl;
+        dispInorder(ptr->right);
+    }
+    else  
+    {
+        cout<<"Tree is done"<<endl;
+        
+    }
+}
+void disp(int order, struct Node * ptr)
+{
+	if( order == 1 )//inOrder
+	{
+		//dispInorder(root);
+		if (ptr != NULL)
+	    {
+	        disp(order, ptr->left);
+	        cout<<ptr->data<<"  ";
+	        disp(order, ptr->right);
+	    }
+	    else  
+	    {
+	        //cout<<"Tree is done"<<endl;
+	    }
+	    
+	}
+	else if( order == 2 )//preOrder
+	{
+		//dispInorder(root);
+		if (ptr != NULL)
+	    {
+	        cout<<ptr->data<<"  ";
+			disp(order, ptr->left);
+	        disp(order, ptr->right);
+	    }
+	    else  
+	    {
+	        //cout<<"Tree is done"<<endl;  
+	    }
+	}
+	else if( order == 3 )//postOrder
+	{
+		//dispInorder(root);
+		if (ptr != NULL)
+	    {
+	        disp(order, ptr->left);
+	        disp(order, ptr->right);
+	        cout<<ptr->data<<"  ";
+	    }
+	    else  
+	    {
+	        //cout<<"Tree is done"<<endl;
+	    }
+	}
+}
+
+int main()
+{
+	struct Node * root, * left1, *right1,  *left1_left, *left1_right,  *right1_left, *right1_right;
+	root = (struct Node *)malloc( sizeof(struct Node ) );
+	left1 = (struct Node *)malloc( sizeof(struct Node ) );
+	right1 = (struct Node *)malloc( sizeof(struct Node ) );
+	
+	left1_left = (struct Node *)malloc( sizeof(struct Node ) );
+	left1_right = (struct Node *)malloc( sizeof(struct Node ) );
+	right1_left = (struct Node *)malloc( sizeof(struct Node ) );
+	right1_right = (struct Node *)malloc( sizeof(struct Node ) );
+	//create tree
+	root->left = left1; root->right = right1;	root->data = 1;
+	left1->left = left1_left; left1->right = left1_right;	left1->data = 2;
+	right1->left = right1_left; right1->right = right1_right;	right1->data = 3;
+	
+	left1_left->left = NULL; left1_left->right = NULL;	left1_left->data = 4;
+	left1_right->left = NULL; left1_right->right = NULL;	left1_right->data = 5;
+	right1_left->left = NULL; right1_left->right = NULL;    right1_left->data = 6;
+	right1_right->left = NULL; right1_right->right = NULL;	right1_right->data = 7;
+
+	
+	cout<<"inOrder------------------"<<endl; disp(1,root); cout<<endl;
+	cout<<"preOrder------------------"<<endl; disp(2,root); cout<<endl;
+	cout<<"postOrder------------------"<<endl; disp(3,root); cout<<endl;
+	
+	return 0;
+}
