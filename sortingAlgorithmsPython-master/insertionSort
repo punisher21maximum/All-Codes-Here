@@ -1,0 +1,30 @@
+def insertionSort(k):
+          for i in range( len(k)+1 ):
+                    last = k[i-1] ;
+                    for j in range( i ):
+                              if last < k[j]  :
+                                        diff = i - j
+                                        last_index = i-1
+                                        for z in range( diff-1 ):
+                                                  k[last_index] = k[last_index-1]
+                                                  last_index -= 1
+                                        k[j] = last
+                                        break
+                                        
+          return k
+k = '4 3 2 10 12 1 5 6'
+k = k.split()
+k = [int(i) for i in k]
+print k
+print insertionSort(k)
+
+'''
+>>> 
+[1, 2, 3, 4, 5, 10, 12, 6]
+[1, 2, 3, 4, 5, 6, 10, 12]
+>>> 
+'''
+
+
+
+

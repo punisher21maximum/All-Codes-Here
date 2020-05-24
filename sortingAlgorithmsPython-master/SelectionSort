@@ -1,0 +1,15 @@
+k = '5 4 3 2 1'
+k = k.split()
+print k
+#selection sort
+#choose smalles shift to leftest of list under consideration
+for i in range( len(k) ):#consider only unsorted  list
+          minn = k[i] #set minn as first ele
+          for j in range( i, len(k) ): 
+                    if k[j] < minn:
+                              temp = minn
+                              minn = k[j]
+                              k[j] = temp       
+          k[i] = minn
+print k
+                    

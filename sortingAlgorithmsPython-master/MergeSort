@@ -1,0 +1,36 @@
+def mergeSort( arr ):
+          lenn = len(arr)
+          if lenn>1 :
+                    if ( lenn )%2 == 1:#odd
+                              mid = ( lenn/2 ) + 1
+                    else:#even
+                              mid = lenn/2
+                    L = arr[:mid]
+                    R = arr[mid:]
+                    mergeSort( L )
+                    mergeSort( R )
+                    
+                    i =0; j=0; k=0
+                    while i < len(L) and j < len(R):
+                              #print L[i] , R[j], arr
+                              if L[i] < R[j]:
+                                        arr[k]=L[i]
+                                        i+=1
+                              else:
+                                        arr[k]=R[j]
+                                        j+=1
+                              k+=1 ; 
+                              #print '-->',arr[:k]
+                    while i < len(L):
+                              arr[k]=L[i]
+                              k+=1 ;  i+=1
+                    while j<len(R):
+                              arr[k]=R[j]
+                              k+=1; j+=1
+                    print '--->','L',L,'R',R,'L+R',arr[:k]                    
+          return arr
+
+arr = [12, 11, 13, 6,7,5]
+print arr
+arr = mergeSort(arr) 
+print arr
