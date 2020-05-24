@@ -1,0 +1,143 @@
+//implement banker algorithm
+#include<iostream>
+using namespace std;
+
+int maxA[5][3] = {
+	{7, 4, 0},
+	{3, 2, 2},
+	{9, 0, 2},
+	{2, 2, 2},
+	{4, 3, 3}
+};
+
+int allocatedA[5][3] = {
+	{0, 1, 0},
+	{2, 0, 0},
+	{3, 0, 2},
+	{2, 1, 1},
+	{0, 0, 2}
+};
+
+/*
+int needA[5][3] = {
+	{7, 3, 3},
+	{1, 2, 2},
+	{6, 0, 0},
+	{0, 1, 1},
+	{4, 3, 1}
+};
+*/
+//isPossible(temp_need, avai_ptr)
+int isPossible(int * temp_need, int * avai_ptr)
+{
+	int flag = 0;
+	for(int i=0; i<3; i++)
+	{
+		if(  temp_need[i]<=(*avai_ptr)  )
+		{
+			flag ++;
+		}
+		avai_ptr ++;
+	}
+
+	return flag;
+}
+//update_avai(temp_allocated, avai_ptr)
+void  update_avai(int * temp_allocated, int * avai_ptr)
+{
+	for(int i=0; i<3; i++)
+	{
+
+		(*avai_ptr) += temp_allocated[i];
+
+		avai_ptr ++;
+	}
+
+}
+
+int main()
+{
+	//create need array;
+	int needA[5][3];
+	for(int a=0; a<5; a++)
+	{
+		for(int b=0; b<3; b++)
+		{
+			needA[a][b] = maxA[a][b] - allocatedA[a][b];
+		}
+	}
+	for(int a=0; a<5; a++)
+	{
+		for(int b=0; b<3; b++)
+		{
+			cout<<needA[a][b]<<"  ";
+		}
+		cout<<endl;
+	}
+	//avai
+	int avai[3] = {3, 2, 2};
+	int * avai_ptr = &avai[0];
+
+	//main prog
+	//int max_avai[3] = {10, 5, 7};
+	int doneA[5] = {0, 0, 0, 0, 0};
+	int seqA[5] = {0, 0, 0, 0, 0};
+	int ctr = 0;
+	int temp_need[3] , temp_allocated[3] ;
+	while ( ctr != 5)//until all 5 process complete
+	{
+		
+
+
+		for(int i=0; i<5; i++)//check for all processes
+		{
+			if (doneA[i] == 0)//if P not done
+			{
+				for (int k=0; k<3; k++)
+				{
+					cout<<avai[k]<<"s  ";
+				}
+				cout<<endl;
+				//get needed of Pi
+				for (int k=0; k<3; k++)
+				{
+					temp_need[k] = needA[i][k];
+				}
+				//check if need < avai
+				int flag = 0;
+				for(int i=0; i<3; i++)
+				{
+					if(  temp_need[i] <= avai[i]  )
+					{
+						flag ++;
+					}
+				}
+				if ( flag != 3 )
+				{
+					continue;
+				}
+				//add pi to deq
+				seqA[ctr] = i;
+				//update avai
+				for (int j=0; j<3; j++)
+				{
+					avai[j] += allocatedA[i][j];
+				}
+
+				cout<<endl;
+				//add to doneA
+				doneA[i] = 1;
+				//++ ctr
+				ctr += 1;
+
+			}
+		}
+	}
+	for (int k=0; k<5; k++)
+	{
+		cout<<seqA[k]<<"  ";
+	}
+
+	return 0;
+}
+

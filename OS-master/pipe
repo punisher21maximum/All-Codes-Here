@@ -1,0 +1,63 @@
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+
+void processA(int writefd)
+{
+int len = 0;
+char buff[80];
+printf("Enter the string : ");
+fgets(buff, 80, stdin);
+len = strlen(buff);
+if(buff[len-1] = '\n')
+{
+len--;
+}
+write(writefd, buff, len);
+}
+void processB(int readfd)
+{
+int n, i, j;
+char str[80], temp;
+n = read(readfd, str, 80);
+str[n] = '\0';
+i = 0;
+j = strlen(str) - 1;
+while(i<j)
+{
+temp = str[i];
+str[i] = str[j];
+str[j] = temp;
+i++; j--;
+}
+printf("reverse: %s", str);
+}
+int main()
+{
+   int pipe1[2];
+   pid_t childpid, cp;
+   pipe(pipe1);
+   childpid = fork();
+   cp = fork();
+
+   if (childpid == 0)
+   {
+    wait(NULL);
+    close(pipe1[1]);//close write
+    processB(pipe1[0]);//read
+    printf("\n %d", childpid);
+    printf("\n cp %d", cp);
+   }
+   else
+   {
+    close(pipe1[0]);//close read
+    processA(pipe1[1]);//write
+    printf("\n else %d", childpid);
+    printf("\n cp %d", cp);
+   }
+   return 0;
+
+}

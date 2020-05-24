@@ -1,0 +1,95 @@
+#include<iostream>
+
+using namespace std;
+
+//global variables ***************************************************************
+int mutex = 1, empty = 3, full = 0, item=0;
+/*
+initial value - queue empty
+empty - 3 : max value of mutex
+full - 0 : nothing in the queue
+when queue is full
+empty - 0
+full - 3
+
+empty and full denote the no. of bloacks empty and full in the buffer queue.
+*/
+//functions - wait and signal ****************************************************
+int wait(int s)
+{
+	return --s;//empty = wait(empty)
+}
+//reduce the value
+int signal(int s)
+{
+	return ++s;//signal = signal(full)
+}
+//increase the value
+/*
+wait and signal 
+1]during "producing"
+empty decrease by 1, so empty = wait(empty)
+full increase by 1, so full = signal(full)
+2]during "consuming"
+empty increase by 1, so empty = signal(empty)
+full decrease by 1, so full = wait(full)
+*/
+//function - producer and consumer
+//producer
+void produce()
+{
+	mutex = wait(mutex);//mutex is 0 now, busy
+	empty = wait(empty);
+	full = signal(full);
+	cout<<"Produced, item: "<<++item<<endl;
+	mutex = signal(mutex);//nutex is 1, free now
+}
+//consumer
+void consume()
+{
+	mutex = wait(mutex);//mutex is 0 now, busy
+	empty = signal(empty);
+	full = wait(full);
+	cout<<"Consumed, item: "<<item--<<endl;
+	mutex = signal(mutex);//nutex is 1, free now
+}
+
+int main(){
+	//driver program
+	/*
+	mutex == 1
+	consume or produce can start
+	no operation is already going on 
+	to produce or consume -> mutex is set to 0, so consider processor is busy and other 
+	operation can not happen write now.
+	*/
+	int key=0, cont=1;
+	
+	while(cont)
+	{
+		cout<<"1.Produce 2.Consume 3.Exit\n"; cin>>key;
+		if (key==1)//no. of empty blocks is not zero
+		{
+			if(mutex==1 and empty!=0)
+				produce();
+			else
+				cout<<"Buffer is Full, can't Produce!!!\n";
+		}
+		else if(key==2)//no. of empty blocks is not zero
+		{
+			if(mutex==1 and full!=0)
+				consume();
+			else
+				cout<<"Buffer is empty, can't Consume!!!\n";
+		}
+		else if(key==3) break;
+		else
+		{
+			cout<<"Enter 1, 2 or 3\n";
+		}
+		cout<<"Do you want to cont? Yes(1), No(0) :   ";
+		cin>>cont;
+	}
+
+	return 0;
+}

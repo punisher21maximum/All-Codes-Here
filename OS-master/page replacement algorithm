@@ -1,0 +1,224 @@
+#include<iostream>
+#include<stdio.h> 
+#include<stdlib.h> 
+using namespace std;
+int fault;
+int num_of_frame = 3;//LRU
+int first_in_index = 0;
+int optimal_index = 0;
+int pages[] = 
+		{
+			4, 7, 6, 1, 7, 6, 1, 2, 7, 2
+		};
+
+int LRU_algo(int  memory_pgs [], int pg, int  LRU_pg [])
+{
+	int flag = 0;
+	cout<<"---------------- look for page "<<pg<<endl;
+	//print current memory
+	cout<<"memory_pgs "<<endl;
+	for (int i=0; i<num_of_frame; i++) //miss or hit
+	{
+		cout<<memory_pgs[i]<<"  ";
+	}	
+	cout<<endl;
+	//end
+	
+	//check if pg in memory_pgs
+	for (int i=0; i<num_of_frame; i++) //miss or hit
+	{
+		if (  memory_pgs[i] == pg ) //is page in memory
+			flag = 1;
+	}
+ 	
+ 	//print LRU
+ 	cout<<"LRU_pg "<<endl;
+	for (int i=0; i<num_of_frame; i++) //miss or hit
+	{
+		cout<<LRU_pg[i]<<"  ";
+	}	
+	cout<<endl;
+	//end	
+ 	
+ 	//if miss
+	if (flag==0) //miss
+	{
+ 		//find the page LRU
+ 		int replace_index = 0;
+ 		for (int i=0; i<num_of_frame; i++)
+ 		{
+ 			if( LRU_pg[i] == num_of_frame  )
+ 			{
+ 				replace_index = i;
+				LRU_pg[i] = 1;
+			}	
+			else
+			{
+				LRU_pg[i] += 1;	
+			}	 
+		}
+		//replace page
+		memory_pgs[replace_index] = pg;
+		fault ++;
+		cout<<"---------------- miss "<<pg<<endl;
+	}
+	else //hit
+	{
+		cout<<"---------------- hit  "<<pg<<endl;
+	}
+ 
+	return 1;
+}
+int FIFO_algo(int  memory_pgs [], int pg)
+{
+	int flag = 0;
+	cout<<"---------------- look for page "<<pg<<endl;
+	//print current memory check if pg in memory_pgs
+	cout<<"memory_pgs "<<endl;
+	for (int i=0; i<num_of_frame; i++) //miss or hit
+	{
+		cout<<memory_pgs[i]<<"  ";
+		if (  memory_pgs[i] == pg ) //is page in memory
+			flag = 1;
+	}
+	cout<<endl;
+ 	//end	
+ 	
+ 	//if miss
+	if (flag==0) //miss
+	{
+ 		//first_in_index
+		memory_pgs[first_in_index] = pg;
+		if (first_in_index == 2) 
+			first_in_index = -1;
+		first_in_index ++;
+		fault ++;
+		cout<<"---------------- miss "<<pg<<endl;
+	}
+	else //hit
+	{
+		cout<<"---------------- hit  "<<pg<<endl;
+	}
+ 
+	return 1;	
+}
+int OPTIMAL_algo(int  memory_pgs [], int pg, int current_pg)
+{
+	int flag = 0;
+	cout<<"---------------- look for page "<<pg<<endl;
+	//print current memory check if pg in memory_pgs
+	cout<<"memory_pgs "<<endl;
+	for (int i=0; i<num_of_frame; i++) //miss or hit
+	{
+		cout<<memory_pgs[i]<<"  ";
+		if (  memory_pgs[i] == pg ) //is page in memory
+			flag = 1;
+	}
+	cout<<endl;
+ 	//end	
+ 	
+ 	//if miss
+	if (flag==0) //miss
+	{
+ 		//find the one with max index for first next occurence or not found
+ 		//need pages, current page index, memory_pgs
+ 		int missing_flag = 1;
+ 		for(int j=0; j<num_of_frame; j++)
+ 		{
+ 			for(int i=current_pg; i<sizeof(pages)/4; i++)  
+	 		{
+	 			if(pages[i] == memory_pgs[j])
+	 			{
+					if(i > optimal_index)
+		 			{
+		 				optimal_index = i;
+					}
+					missing_flag = 0;
+					break;
+				}		
+			}	
+			if (missing_flag == 1)
+			{
+				optimal_index = j;
+				break;
+			}
+		}
+
+		memory_pgs[optimal_index] = pg;
+		fault ++;
+		cout<<"---------------- miss "<<pg<<endl;
+	}
+	else //hit
+	{
+		cout<<"---------------- hit  "<<pg<<endl;
+	}
+ 
+	return 1;	
+}
+int main()
+{
+	//most recently used page has LRU - 1
+	//least recently page has LRU - 4
+	
+	
+	//take input - pages 7 0 1 2 0 3 0 4 2 3 0 3 2
+ 	int lru_fault = 0, fifo_fault = 0, optimal_fault = 0;
+	
+		
+	
+	/*
+	LRU page record
+	*/
+	int LRU_pg[num_of_frame];  int memory_pgs[4];
+	for (int i=0; i<num_of_frame; i++)
+	{
+		LRU_pg[i] = 3-i; //1 2 3 4
+		memory_pgs[i] = pages[i];
+	}
+	
+	
+	fault = 0;
+	for (int i=0; i<num_of_frame; i++)//reset  memory_pgs
+	{
+		memory_pgs[i] = pages[i];
+	}
+	cout<<"LRU_algo : "<<endl;
+	for (int i=num_of_frame; i<sizeof(pages)/4; i++)
+	{
+		//cout<<"here ---->"<<pages[i]<<endl;
+		LRU_algo(&memory_pgs[0], pages[i], &LRU_pg[0]);
+	}
+	lru_fault = fault;
+	
+	fault = 0;
+	for (int i=0; i<num_of_frame; i++)//reset  memory_pgs
+	{
+		memory_pgs[i] = pages[i];
+	}
+	cout<<"FIFO_algo : "<<endl;
+	for (int i=num_of_frame; i<sizeof(pages)/4; i++)
+	{
+		//cout<<"here ---->"<<pages[i]<<endl;
+		FIFO_algo(&memory_pgs[0], pages[i]);
+	}
+	fifo_fault = fault;
+	
+	fault = 0;
+	for (int i=0; i<num_of_frame; i++)//reset  memory_pgs
+	{
+		memory_pgs[i] = pages[i];
+	}
+	cout<<"OPTIMAL_algo : "<<endl;
+	for (int i=num_of_frame; i<sizeof(pages)/4; i++)
+	{
+		//cout<<"here ---->"<<pages[i]<<endl;
+		OPTIMAL_algo(&memory_pgs[0], pages[i], i);
+	}
+	optimal_fault = fault;
+	
+	cout<<"optimal_fault ---> "<<optimal_fault+num_of_frame<<endl;
+	cout<<"lru_fault ---> "<<lru_fault+num_of_frame<<endl;
+	cout<<"fifo_fault ---> "<<fifo_fault+num_of_frame<<endl;
+	
+	return 0;
+}
