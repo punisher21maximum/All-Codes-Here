@@ -1,0 +1,39 @@
+#include<stdio.h>
+#include<string.h>
+int main()
+{
+	//input program
+	char program[]="  int a = 2 + 5 ;   app cap tab    sap  ";
+	//create array of char for storing tokens
+	char tokens[20][20]; int token_index=0;
+	//initialise pm_index to start ie 0
+	int pm_index=0;
+	
+	while(pm_index<strlen(program))//till end of program
+	{
+		if(program[pm_index]!=' ')//if char not a white space
+		{
+			int word_begin=pm_index; //set starting index of word //printf("\n start --> %d ", s_p);
+			while(program[pm_index]!=' ' and pm_index<strlen(program))//while its not a white space
+			{
+//				printf("%c", program[pm_index]);
+				pm_index++;//keep moving to next non-white space
+			}
+			int word_end=pm_index; //end of word //printf(" end --> %d ", s_p-1);
+			
+			char temp[20]="";//temporary word
+			strncpy(temp, program+word_begin, word_end-word_begin);//copy the word in temp
+			printf(">>> %s <<<",  temp) ;
+			strcpy(tokens[token_index++],temp);//add word to tokens list
+		 
+			printf("\n");
+		}
+		else pm_index++;
+	}
+	printf("\n------tokens-----------\n");
+	for(int i=0; i<token_index; i++)
+	{
+		printf("%s ", tokens[i]);
+	}
+	return 0;
+}

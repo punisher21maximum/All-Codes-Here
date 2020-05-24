@@ -1,0 +1,45 @@
+%{
+ 
+%}
+
+%%
+
+[/t ] { printf("%s : space\n", yytext); }
+
+"while"|"if"|"else" {printf("%s : keywords\n", yytext);}
+
+[ + - * / % = ] { printf("\n%s : operator\n", yytext); }
+
+
+[ : | , ] { printf("\n%s : separator\n", yytext); }
+
+[a-zA-Z][a-zA-Z0-9_]* {printf("%s : identifier\n", yytext);}
+
+^[ 0-9 ]*[.][ 0-9 ]*$ { printf("\n%s : float\n", yytext); }
+
+[ 0-9 ]+ { printf("\n%s : integer\n", yytext); }
+
+. ;
+
+%%
+
+void main()
+{
+FILE * fp;
+fp=fopen("c_file.txt", "r");
+yyin=fp;
+
+yylex();
+}
+
+int yywrap()
+{
+return 0;
+}
+
+
+
+//-------------------------------------------------------------------
+
+c_file.txt
+int a = 5 + 7 ;
